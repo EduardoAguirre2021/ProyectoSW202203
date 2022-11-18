@@ -10,5 +10,22 @@ export class Users {
         }).catch(error=> console.error(error));
     }
 
-    
+    public signin(name: string, username: string, email:string, password: string, birthDate: Date) {
+        const currentDate= new Date(); 
+        const newUser= {
+            name,
+            email,
+            username,
+            password: getHash(password),
+            birthDate: birthDate,
+            status: 'ACT', 
+            oldPasswords: [] as string[],
+            created: currentDate, 
+            updated: currentDate, 
+            roles: ['public'],
+            _id: null
+        };
+        return this.dao.createUser(newUser);
+    }
+
 }

@@ -3,6 +3,7 @@ export interface IUser {
     name: string;
     email: string;
     username: string;
+    birthDate: Date;
     status: string; 
     password?: string;
     oldPasswords?: string[];
