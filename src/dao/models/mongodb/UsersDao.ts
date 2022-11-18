@@ -3,6 +3,7 @@ import { Db } from "mongodb";
 import { Abstract } from "@dao/models/mongodb/AbstractDao";
 
 
+
 export class UserDao extends Abstract<IUser> {
     public constructor(db: Db) {
         super('users', db);
@@ -35,13 +36,8 @@ export class UserDao extends Abstract<IUser> {
         return this.UpdateRaw(id, {$addToSet: {roles: role}});
     }
 
-    updateLoginSuccess(id: string) {
-        const currentDate= new Date(); 
-        return this.update(id, {lastLogin: currentDate, failedAttempts: 0, updated: currentDate});
-    }
-
-    updateUserFailed(id: string) {
-        return this.UpdateRaw(id, {$inc: {failedAttempts: 1}, $set: {updated: new Date()}});
+    changePassword(id: string, newPassword: string, lastPassword) {
+        return this.UpdateRaw(id, {$set: {password:newPassword}, $addToSet: {oldPasswords: lastPassword}});
     }
 
 
