@@ -17,7 +17,7 @@ async (req, res) => {
         if(!validation.isEmpty()) {
             res.status(400).json({errors: validation.array() });
         } else {
-            const {name, username, email, birthDate,password} = req.body;
+            const {name, username, email, birthDate,password} = req.body;     
             const result= await users.signin(name, username, email, password, birthDate);
             console.log("Usuario Creado: ", result);
             res.status(200).json({result: true, msg: "Usuario Creado exitosamente"});

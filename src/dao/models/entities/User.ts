@@ -13,3 +13,12 @@ export interface IUser {
     lastLogin?: Date;
     roles: string[];
 }
+
+export interface IUserGoogle {
+    displayName: string;
+    email: string;
+    status: string;
+    created: Date;
+    lastLogin: Date;
+    IdGoogle?: unknown;
+  }
