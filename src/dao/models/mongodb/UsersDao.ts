@@ -32,8 +32,8 @@ export class UserDao extends Abstract<IUser> {
         return this.findAll();
     }
 
-    addRoleToUser( id: string, role: string) {
-        return this.UpdateRaw(id, {$addToSet: {roles: role}});
+    addRoleToUser( id: string, role: string, currentDate: Date) {
+        return this.UpdateRaw(id, {$set: {updated: currentDate}, $addToSet: {roles: role}});
     }
 
     changePassword(id: string, newPassword: string, lastPassword: string) {
