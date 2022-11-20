@@ -36,6 +36,10 @@ export class UserDao extends Abstract<IUser> {
         return this.UpdateRaw(id, {$set: {updated: currentDate}, $addToSet: {roles: role}});
     }
 
+    removeRoleToUser(id: string,role: string ,currentDate: Date) {
+        return this.UpdateRaw(id, {$pull: {roles: role}, $set: { updated: currentDate }});
+    }
+
     changePassword(id: string, newPassword: string, lastPassword: string) {
         return this.UpdateRaw(id, {$set: {password:newPassword}, $addToSet: {oldPasswords: lastPassword}});
     }

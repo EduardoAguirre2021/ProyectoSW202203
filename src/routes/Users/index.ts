@@ -108,13 +108,35 @@ async (req, res) => {
             const {id}= req.params;
             const {role}= req.body;
             const result= await users.addUserRole(id, role);
-            console.log("Rol añadido", role);
-            res.status(200).json({msg: "Rol añadido", out: result});
+            console.log("Rol añadido", result);
+            res.status(200).json({msg: "Rol añadido", result: true});
+        }
+    } catch (error) {
+        console.log("Error: ", error);
+        res.status(500).json({error: "Error al cargar los datos"});
+    }
+});
+
+
+router.put('/removerole/:id', body('role').isIn(['public', 'admin', 'auditor', 'support']).withMessage("Role incorrecto") ,
+async (req, res) => {
+    try {
+        const validation= validationResult(req);
+        if(!validation.isEmpty()) {
+            res.status(400).json({errors: validation.array() });
+        }
+        else {
+            const {id}= req.params;
+            const {role}= req.body;
+            const result= await users.removeRoleToUser(id, role);
+            console.log("Rol eliminado", result);
+            res.status(200).json({msg: "Rol eliminado", result: true});
         }
     } catch (error) {
         console.log("Error: ", error);
         res.status(500).json({error: "Error al cargar los datos"});
     }
 })
+
 
 export default router;

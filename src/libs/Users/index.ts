@@ -67,6 +67,16 @@ export class Users {
         return this.dao.addRoleToUser(id,role,currentDate);
     }
 
+    public async removeRoleToUser(id: string, role: string) {
+        const currentDate= new Date();
+        if(!availableRole.includes(role)) {
+            throw new Error("Role incorrecto");
+        }
+
+        return this.dao.removeRoleToUser(id, role, currentDate);
+
+    }
+
 
 
 
