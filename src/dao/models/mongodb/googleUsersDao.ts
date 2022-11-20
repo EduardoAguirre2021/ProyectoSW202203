@@ -16,8 +16,12 @@ export class GoogleUsers extends Abstract<IUserGoogle> {
         return this.update(id, { lastLogin: new Date() });
       }
     
-      getUserByEmail(email: string) {
+    getUserByEmail(email: string) {
         const query = { email };
         return this.findOneByFilter(query);
       }
+
+    getAllUsers() {
+      return this.findAll();
+    }
 }

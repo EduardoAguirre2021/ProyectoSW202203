@@ -37,4 +37,12 @@ export class UsersGoogle {
       throw error;
     }
   }
+
+  public async getAll () {
+    return this.dao.getAllUsers();
+  }
+
+  public async getUserByEmail(email: string) {
+    return this.dao.getUserByEmail(email);
+  }
 }

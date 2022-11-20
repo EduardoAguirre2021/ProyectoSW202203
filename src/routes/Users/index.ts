@@ -75,7 +75,7 @@ router.get('/byemail',body('email').isEmail().withMessage("Email enviado tiene f
         else {
             const {email}= req.body; 
             const result= await users.findUserByEmail(email);
-            console.log("Usuario encontrado", result);
+            console.log(result);
             res.status(200).send(result);
            
         }
@@ -89,7 +89,7 @@ router.get('/byusername', async (req, res) => {
     try {
             const {username}= req.body;
             const result= await users.findUserByUsername(username);
-            console.log("Usuario encontrado", result);
+            console.log(result);
             res.status(200).send(result);
     } catch (error) {
         console.log("Error: ", error);
