@@ -1,18 +1,17 @@
 export interface IPeliculas {
-    //imagenpeli: arreglo
+    imagen: string;
     nombre: string;
     titulo: string;
-    duracion: string;
+    duracion: number;
     sinopsis: string;
-    //generos: string[];
-    raiting:number;
-    fechalanzamiento: Date;
+    generos: 'Terror' | 'Comedia' | 'Romance' | 'Misterio';
+    rating: 'G' | 'PG' | 'PG-13' | 'R';
+    fecha_lanzamiento: Date;
     director: string;
     //actores: string[];
-    //puntuacion: calculada
-    puntuacionIndividual: string;
-    //trailer: link
-    //status: string; //'ACT' | 'INA' | 'BLQ'
-    comentario: string;
+    //puntuaciones: string[]; Rating de Usuarios
+    trailer: string; //Link de YT
+    status: 'ACT' | 'INA' | 'BLQ';
+    //comentarios: string[]; Comentarios de Usuarios
     _id?: unknown;
 };
