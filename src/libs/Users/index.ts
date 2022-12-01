@@ -1,6 +1,7 @@
 import { getConnection } from "@dao/models/mongodb/MongodbConnection";
 import { UserDao } from "@dao/models/mongodb/UsersDao";
-import { getHash } from "@utils/passHash";
+import { compareHash, getHash } from "@utils/passHash";
+import { sent } from "@utils/nodemailer";
 
 const availableRole = ['public', 'admin', 'auditor', 'support'];
 const availableStatus= ['ACT', 'INA'];
@@ -77,7 +78,78 @@ export class Users {
 
     }
 
+    //funcion para loguear al usuario
+    public async login(email: string, password: string) {
+        const result = await this.dao.getUserByEmail(email);
+        if(result.length === 0) {
+            return false;
+        }
+        else
+        {
+            const user= result[0];
+            if(compareHash(password, user.password)) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+    }
 
+    //funcion para enviar el correo de recuperacion de contraseña con el pin
+    public async recoverPassword(email: string) {
+        const result = await this.dao.getUserByEmail(email);
+        if(result.length === 0) {
+            return false;
+        }
+        else
+        {
+            const user= result[0];
+            const pin = Math.floor(Math.random() * 1000000);
 
+            try
+            {
+                sent(user.email, pin);
+                return true;
+            }
+            catch(error)
+            {
+                return false;
+            }
+        }
+    }
 
+   /* public async verifyPin(pin: number, email: string) {
+        
+        if(pin === 123456 && email === 'yovanysanchez321@gmail.com') {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }*/
+
+    public async changePassword(email: string, password: string) {
+        const result = await this.dao.getUserByEmail(email);
+        if(result.length === 0) {
+            return false;
+        }
+        else
+        {
+            const user= result[0];
+            const currentDate= new Date();
+            const updateUser= {
+                password: getHash(password),
+                updated: currentDate
+            };
+
+            if(this.dao.updateUser(user._id.toString(), updateUser))
+            {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+    }
 }

@@ -138,5 +138,120 @@ async (req, res) => {
     }
 })
 
+//Agregar ruta para login
+
+router.get('/login', body('email').isEmail().withMessage("Email enviado tiene formato incorrecto"), 
+async (req, res) => {
+    try {
+        const validation= validationResult(req);
+        if(!validation.isEmpty()) {
+            res.status(400).json({errors: validation.array() });
+        }
+        else {
+            const {email, password}= req.body;
+            const result= await users.login(email, password);
+            if(result == true)
+            {
+                res.status(200).json({msg: "Login exitoso", result: true});
+            }
+            else
+            {
+                res.status(200).json({msg: "Login fallido", result: false});
+            }
+        }
+    } catch (error) {
+        console.log("Error: ", error);
+        res.status(500).json({error: "Error al cargar los datos"});
+    }
+});
+
+router.get('/recoverpassword', body('email').isEmail().withMessage("Email enviado tiene formato incorrecto"),
+async (req, res) => {
+    try {
+        const validation= validationResult(req);
+        if(!validation.isEmpty()) {
+            res.status(400).json({errors: validation.array() });
+        }
+        else {
+            const {email}= req.body;
+            const result= await users.recoverPassword(email);
+            if(result == true)
+            {
+                res.status(200).json({msg: "Correo Enviado Exitosamente!", result: true});
+            }
+            else
+            {
+                res.status(200).json({msg: "Correo no enviado, verifique la direccion de Correo Electronico", result: false});
+            }
+        }
+    } catch (error) {
+        console.log("Error: ", error);
+        res.status(500).json({error: "Error al cargar los datos"});
+    }
+});
+
+/*router.get('/verifypin', body('pin').isNumeric().withMessage("Pin enviado tiene formato incorrecto"),
+body('email').isEmail().withMessage("Email enviado tiene formato incorrecto"),
+async (req, res) => {
+    try {
+        const validation= validationResult(req);
+        if(!validation.isEmpty()) {
+            res.status(400).json({errors: validation.array() });
+        }
+        else {
+            const {pin, email}= req.body;
+            const result= await users.verifyPin(pin, email);
+            if(result == true)
+            {
+                res.status(200).json({msg: "Pin Verificado Exitosamente!", result: true});
+            }
+            else
+            {
+                res.status(200).json({msg: "Pin no verificado, verifique el pin", result: false});
+            }
+        }
+    } catch (error) {
+        console.log("Error: ", error);
+        res.status(500).json({error: "Error al cargar los datos"});
+    }
+});
+*/
+
+router.get('/changepassword', body('password').isLength({min: 7}).withMessage("Password enviado tiene formato incorrecto"),
+body('confirmpassword').isLength({min: 7}).withMessage("Confirm Password enviado tiene formato incorrecto"),
+body('email').isEmail().withMessage("Email enviado tiene formato incorrecto"),
+async (req, res) => {
+    try {
+        const validation= validationResult(req);
+        if(!validation.isEmpty()) {
+            res.status(400).json({errors: validation.array() });
+        }
+        else {
+            const {password, confirmpassword, email}= req.body;
+            //const result= await users.changePassword(password, confirmPassword, email);
+            if(password != confirmpassword)
+            {
+                res.status(200).json({msg: "Las contraseñas no coinciden", result: false});
+            }
+            else
+            {   
+                const result = await users.changePassword(email, password);
+                if(result == true)
+                {
+                    res.status(200).json({msg: "Contraseña cambiada exitosamente", result: true});
+                }
+                else
+                {
+                    res.status(200).json({msg: "No se pudo cambiar la contraseña", result: false});
+                }
+            }
+        }
+    } catch (error) {
+        console.log("Error: ", error);
+        res.status(500).json({error: "Error al cargar los datos"});
+    }
+});
+
+
 
 export default router;
