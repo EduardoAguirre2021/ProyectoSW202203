@@ -1,57 +1,51 @@
-import { Router} from 'express';
-import { IPeliculas, Pelicula } from '@libs/Peliculas';
-import { WithUserRequest } from '@routes/index';
+import { Request, Response, Router } from 'express';
+import { IPelicula, Pelicula } from '@libs/Peliculas';
+
 const router = Router();
-const PeliculaInstance = new Pelicula();
+const peliculaInstance = new Pelicula();
 
-
-router.get('/', async (req: WithUserRequest, res)=>{
+router.get('/', async (_req: Request, res: Response) => {
   try {
-    console.log("PELICULAS", req.user);
-    res.json(await PeliculaInstance.getAllPeliculas());
+    res.json(await peliculaInstance.getAllPeliculas());
   } catch (ex) {
-    console.error(ex);
-    res.status(503).json({error:ex});
+    res.status(503).json({ error: ex });
   }
 });
 
-
-router.post('/new', async (req: WithUserRequest, res)=>{
+router.post('/new', async (req: Request, res: Response) => {
   try {
-    const newPelicula = req.body as unknown as IPeliculas;
-    //VALIDATE
+    const newPelicula = req.body as IPelicula;
+    const result = await peliculaInstance.addPelicula(newPelicula);
 
-    const newPelculaIndex = await PeliculaInstance.addPelicula(newPelicula);
-    res.json({newIndex: newPelculaIndex});
+    res.json(result);
   } catch (error) {
-    res.status(500).json({error: (error as Error).message});
+    res.status(500).json({ error: (error as Error).message });
   }
 });
 
-router.put('/update/:index', async (req, res)=>{
+router.put('/update/:index', async (req, res) => {
   try {
-    const { index : id } = req.params;
-    const PeliculaFromForm = req.body as IPeliculas;
-    await PeliculaInstance.updatePelicula(id, PeliculaFromForm);
-    res.status(200).json({"msg":"Registro Actualizado"});
-  } catch(error) {
-    res.status(500).json({error: (error as Error).message});
+    const { index: id } = req.params;
+    const PeliculaFromForm = req.body as IPelicula;
+    await peliculaInstance.updatePelicula(id, PeliculaFromForm);
+    res.status(200).json({ msg: 'Registro Actualizado' });
+  } catch (error) {
+    res.status(500).json({ error: (error as Error).message });
   }
 });
 
-router.delete('/delete/:index', (req, res)=>{
+router.delete('/delete/:index', (req, res) => {
   try {
-    const { index : id } = req.params;
-    if (PeliculaInstance.deletePelicula(id)) {
-      res.status(200).json({"msg": "Registro Eliminado"});
+    const { index: id } = req.params;
+    if (peliculaInstance.deletePelicula(id)) {
+      res.status(200).json({ msg: 'Registro Eliminado' });
     } else {
-      res.status(500).json({'msg': 'Error al eliminar Registro'});
+      res.status(500).json({ msg: 'Error al eliminar Registro' });
     }
   } catch (error) {
-    console.log("Error", error);
-    res.status(500).json({'msg': 'Error al eliminar Registro'});
+    console.log('Error', error);
+    res.status(500).json({ msg: 'Error al eliminar Registro' });
   }
 });
-
 
 export default router;
