@@ -2,6 +2,7 @@ import { getConnection } from "@dao/models/mongodb/MongodbConnection";
 import { UserDao } from "@dao/models/mongodb/UsersDao";
 import { compareHash, getHash } from "@utils/passHash";
 import { sent } from "@utils/nodemailer";
+import { sign } from "@utils/jwt";
 
 const availableRole = ['public', 'admin', 'auditor', 'support'];
 const availableStatus= ['ACT', 'INA'];
@@ -80,19 +81,35 @@ export class Users {
 
     //funcion para loguear al usuario
     public async login(email: string, password: string) {
-        const result = await this.dao.getUserByEmail(email);
-        if(result.length === 0) {
-            return false;
-        }
-        else
+        try
         {
-            const user= result[0];
-            if(compareHash(password, user.password)) {
-                return true;
+            const user = await this.dao.getUserByEmail2(email);
+            
+            if(!!!user) {
+                console.log("LOGIN: USER NOT FOUND: ", `${email}`);
+                throw new Error("User not found");
             }
-            else {
-                return false;
+
+            if (user.status !== 'ACT')
+            {
+                console.log("LOGIN: STATUS NOT ACTIVE: ", `${user.email} - ${user.status}`);
+                throw new Error("Usuario no activo");
             }
+
+            if(!compareHash(password, user.password))
+            {
+                console.log("LOGIN: PASSWORD INVALID: ", `${user.email} - ${user.status}`);
+                throw new Error("Contraseña incorrecta");
+            } 
+
+            const {name, email: emailUser, _id} = user;
+            const returnUser = {name, email: emailUser, _id};
+            return {...returnUser, token: sign(returnUser)};
+        }
+        catch(error)
+        {
+            console.log("LOGIN: ", error);
+            throw error;
         }
     }
 

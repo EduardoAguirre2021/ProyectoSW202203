@@ -44,5 +44,9 @@ export class UserDao extends Abstract<IUser> {
         return this.UpdateRaw(id, {$set: {password:newPassword}, $addToSet: {oldPasswords: lastPassword}});
     }
 
+    getUserByEmail2(email: string) {
+        const query= {email};
+        return this.findOneByFilter(query);
+    }
 
 }

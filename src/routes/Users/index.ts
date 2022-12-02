@@ -164,29 +164,22 @@ router.put(
 
 //Agregar ruta para login
 
-router.post(
-  '/login',
-  body('email').isEmail().withMessage('Email enviado tiene formato incorrecto'),
-  async (req, res) => {
+router.post('/login', body('email').isEmail().withMessage('Email no tiene formato correcto'), async (req, res) => {
     try {
-      const validation = validationResult(req);
-      if (!validation.isEmpty()) {
+        const validation = validationResult(req);
+        if (!validation.isEmpty()) {
         res.status(400).json({ errors: validation.array() });
-      } else {
+        } else {
         const { email, password } = req.body;
         const result = await users.login(email, password);
-        if (result == true) {
-          res.status(200).json(result);
-        } else {
-          res.status(200).json({ msg: 'Login fallido', result: false });
+        console.log('Usuario logueado: ', result);
+        res.status(200).json(result);
         }
-      }
     } catch (error) {
-      console.log('Error: ', error);
-      res.status(500).json({ error: 'Error al cargar los datos' });
+        console.log('Error: ', error);
+        res.status(403).json({ error: 'Credenciales no son validas' });
     }
-  },
-);
+});
 
 router.get(
   '/recoverpassword',
