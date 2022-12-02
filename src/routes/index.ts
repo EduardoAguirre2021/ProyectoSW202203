@@ -1,10 +1,10 @@
-import express from 'express';
-import UsersRouter from "@routes/Users/index";
-import GoogleUserRouter from "@routes/googleOAuth/index"
+import { Request, Router } from 'express';
+import UsersRouter from '@routes/Users/index';
+import GoogleUserRouter from '@routes/googleOAuth/index';
+import PeliculasRoutes from './Peliculas';
 import session from 'express-session';
 import passport from 'passport';
-const router  = express.Router();
-
+const router = Router();
 
 router.use(
   session({
@@ -16,11 +16,12 @@ router.use(
 
 router.use(passport.initialize());
 
-router.get('/', (_req, res) => {
-  res.json({msg:'Hello World!'});
- });
-
- router.use('/security', UsersRouter );
- router.use('/auth', GoogleUserRouter)
+router.use('/security', UsersRouter);
+router.use('/auth', GoogleUserRouter);
+router.use('/movies', PeliculasRoutes);
 
 export default router;
+
+export interface WithUserRequest extends Request {
+  user?: any;
+}
