@@ -181,7 +181,7 @@ router.post('/login', body('email').isEmail().withMessage('Email no tiene format
     }
 });
 
-router.get(
+router.post(
   '/recoverpassword',
   body('email').isEmail().withMessage('Email enviado tiene formato incorrecto'),
   async (req, res) => {
@@ -237,7 +237,7 @@ async (req, res) => {
 });
 */
 
-router.get(
+router.post(
   '/changepassword',
   body('password')
     .isLength({ min: 7 })
