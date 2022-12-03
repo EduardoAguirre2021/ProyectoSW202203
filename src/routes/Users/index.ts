@@ -190,8 +190,8 @@ router.post(
       if (!validation.isEmpty()) {
         res.status(400).json({ errors: validation.array() });
       } else {
-        const { email } = req.body;
-        const result = await users.recoverPassword(email);
+        const { email, pin } = req.body;
+        const result = await users.recoverPassword(email, pin);
         if (result == true) {
           res
             .status(200)

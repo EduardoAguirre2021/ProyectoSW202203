@@ -114,7 +114,7 @@ export class Users {
     }
 
     //funcion para enviar el correo de recuperacion de contraseña con el pin
-    public async recoverPassword(email: string) {
+    public async recoverPassword(email: string, pin: number) {
         const result = await this.dao.getUserByEmail(email);
         if(result.length === 0) {
             return false;
@@ -122,7 +122,7 @@ export class Users {
         else
         {
             const user= result[0];
-            const pin = Math.floor(Math.random() * 1000000);
+            //const pin = Math.floor(Math.random() * 1000000);
 
             try
             {
