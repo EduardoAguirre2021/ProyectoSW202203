@@ -252,9 +252,7 @@ router.post(
         const { password, confirmpassword, email } = req.body;
         //const result= await users.changePassword(password, confirmPassword, email);
         if (password != confirmpassword) {
-          res
-            .status(200)
-            .json({ msg: 'Las contraseñas no coinciden', result: false });
+          res.status(403).json({ coincidir: "Las Contraseñas no coinciden" });
         } else {
           const result = await users.changePassword(email, password);
           if (result == true) {
