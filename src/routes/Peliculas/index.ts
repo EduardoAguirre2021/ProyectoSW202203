@@ -4,11 +4,30 @@ import { IPelicula, Pelicula } from '@libs/Peliculas';
 const router = Router();
 const peliculaInstance = new Pelicula();
 
-router.get('/', async (_req: Request, res: Response) => {
+router.get('/', async (req: Request, res: Response) => {
   try {
-    res.json(await peliculaInstance.getAllPeliculas());
+    const { page, items } = req.query;
+
+    if (Number(page) > 0 && Number(items) > 0) {
+      return res.json(
+        await peliculaInstance.getTheMoviesPaged(Number(page), Number(items)),
+      );
+    }
+
+    // este pueede servir para lo administrativo
+    return res.json(await peliculaInstance.getAllPeliculas());
   } catch (ex) {
-    res.status(503).json({ error: ex });
+    return res.status(503).json({ error: ex });
+  }
+});
+
+router.get('/byid/:index', async (req: Request, res: Response) => {
+  try {
+    const { index: id } = req.params;
+
+    res.json(await peliculaInstance.getMovieByIndex(id));
+  } catch (error) {
+    res.status(503).json({ error });
   }
 });
 

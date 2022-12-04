@@ -17,8 +17,8 @@ export class PeliculaDao extends Abstract<IPeliculas> {
       const totalDocuments = await super.getCollection().countDocuments({});
 
       const totalPages = Math.ceil(totalDocuments / itemsPerPage);
-      const items = await super.findByFilter({
-        sort: { type: -1 },
+      const items = await super.findItemsPaged({
+        sort: { titulo: -1 },
         skip: (page - 1) * itemsPerPage,
         limit: itemsPerPage,
       });
@@ -30,6 +30,15 @@ export class PeliculaDao extends Abstract<IPeliculas> {
         itemsPerPage,
         items,
       };
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  public async getMovieById(identifier: string) {
+    try {
+      const result = await super.findById(identifier);
+      return result;
     } catch (error) {
       throw error;
     }

@@ -33,6 +33,14 @@ export class Pelicula {
     return this.dao.getPeliculas();
   }
 
+  public getTheMoviesPaged(page: number, items: number) {
+    return this.dao.getMoviesPaged(page, items);
+  }
+
+  public getMovieByIndex(id: string) {
+    return this.dao.getMovieById(id);
+  }
+
   public addPelicula(pelicula: IPelicula) {
     const {
       imagen,
@@ -59,7 +67,7 @@ export class Pelicula {
       fecha_lanzamiento,
       director,
       actores,
-      puntuaciones,
+      puntuaciones: Number(puntuaciones),
       trailer,
       status,
     });

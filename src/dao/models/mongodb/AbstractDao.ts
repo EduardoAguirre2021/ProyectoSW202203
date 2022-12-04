@@ -47,6 +47,12 @@ export abstract class Abstract<T> implements IDaoObject {
     return this.collection.find(filter, options).toArray();
   }
 
+  public async findItemsPaged(
+    options: FindOptions<T> = {},
+  ): Promise<WithId<T>[]> {
+    return this.collection.find({}, options).toArray();
+  }
+
   public findOneByFilter(
     filter: Filter<T>,
     options: FindOptions<T> = {},
