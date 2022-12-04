@@ -197,10 +197,7 @@ router.post(
             .status(200)
             .json({ msg: 'Correo Enviado Exitosamente!', result: true });
         } else {
-          res.status(200).json({
-            msg: 'Correo no enviado, verifique la direccion de Correo Electronico',
-            result: false,
-          });
+          res.status(403).json({ error: 'El Correo no pudo ser enviado' });
         }
       }
     } catch (error) {
@@ -265,9 +262,7 @@ router.post(
               .status(200)
               .json({ msg: 'Contraseña cambiada exitosamente', result: true });
           } else {
-            res
-              .status(200)
-              .json({ msg: 'No se pudo cambiar la contraseña', result: false });
+            res.status(403).json({ error: 'No se pudo Cambiar la Contraseña' });
           }
         }
       }
