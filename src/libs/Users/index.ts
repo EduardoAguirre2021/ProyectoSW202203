@@ -77,6 +77,10 @@ export class Users {
 
     }
 
+    public getUsersByUserPaged(page:number, items:number ){
+        return this.dao.getUsersByUserPaged( page, items);
+      }
+
 
 
 

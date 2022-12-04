@@ -35,6 +35,12 @@ export abstract class Abstract<T> implements IDaoObject {
     return await this.collection.find({}).toArray();
   }
 
+  public async findItemsPaged(
+    options: FindOptions<T> = {},
+  ): Promise<WithId<T>[]> {
+    return this.collection.find({}, options).toArray();
+  }
+
   public async findById(identifier: string): Promise<WithId<T>> {
     const _id = new ObjectId(identifier) as Filter<T>;
     return await this.collection.findOne({ _id });

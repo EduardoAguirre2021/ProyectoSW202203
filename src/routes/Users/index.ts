@@ -138,5 +138,16 @@ async (req, res) => {
     }
 })
 
+router.get('/Page', async (req, res)=>{
+    try {
+      const {page, items} = {page:"1", items:"2", ...req.query};
+      console.log("USER", req.user);
+      res.json(await users.getUsersByUserPaged(Number(page), Number(items)));
+    } catch (ex) {
+      console.error(ex);
+      res.status(503).json({error:ex});
+    }
+  });
+
 
 export default router;

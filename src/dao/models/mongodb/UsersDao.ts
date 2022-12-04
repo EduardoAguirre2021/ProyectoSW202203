@@ -45,4 +45,25 @@ export class UserDao extends Abstract<IUser> {
     }
 
 
+    public async getUsersByUserPaged(page:number=1, itemsPerPage: number=10){
+        try {
+          const total = await super.getCollection().countDocuments({});
+          const totalPages = Math.ceil(total / itemsPerPage);
+          const items = await super.findItemsPaged({
+            sort: { "birthDate": -1 },
+            skip: (page - 1) * itemsPerPage,
+            limit: itemsPerPage,
+          });
+            return {
+              total,
+              totalPages,
+              page,
+              itemsPerPage,
+              items
+            };
+        } catch (ex) {
+          console.log("UsersDao mongodb:", (ex as Error).message);
+          throw ex;
+        }
+      }
 }
