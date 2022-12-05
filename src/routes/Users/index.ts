@@ -97,6 +97,19 @@ router.get('/byusername', async (req, res) => {
     }
 });
 
+
+router.get('/byid/:id', async (req, res) => {
+    try {
+            const { id }= req.params;
+            const result= await users.findUserById(id);
+            console.log(result);
+            res.status(200).json(result);
+    } catch (error) {
+        console.log("Error: ", error);
+        res.status(500).json({error: "Error al cargar los datos"});
+    }
+});
+
 router.put('/addrole/:id', body('role').isIn(['public', 'admin', 'auditor', 'support']).withMessage("Role incorrecto") ,
 async (req, res) => {
     try {
@@ -138,7 +151,7 @@ async (req, res) => {
     }
 })
 
-router.get('/Page', async (req, res)=>{
+router.get('/', async (req, res)=>{
     try {
       const {page, items} = {page:"1", items:"2", ...req.query};
       console.log("USER", req.user);

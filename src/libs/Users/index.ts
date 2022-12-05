@@ -58,6 +58,10 @@ export class Users {
         return this.dao.getUserByUsername(username);
     }
 
+    public findUserById(id: string) {
+        return this.dao.getUserById(id);
+    }
+
     public async addUserRole(id: string ,role:string) {
         const currentDate= new Date(); 
         if(!availableRole.includes(role)) {

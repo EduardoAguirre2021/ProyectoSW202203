@@ -35,12 +35,6 @@ export abstract class Abstract<T> implements IDaoObject {
     return await this.collection.find({}).toArray();
   }
 
-  public async findItemsPaged(
-    options: FindOptions<T> = {},
-  ): Promise<WithId<T>[]> {
-    return this.collection.find({}, options).toArray();
-  }
-
   public async findById(identifier: string): Promise<WithId<T>> {
     const _id = new ObjectId(identifier) as Filter<T>;
     return await this.collection.findOne({ _id });
@@ -60,6 +54,13 @@ export abstract class Abstract<T> implements IDaoObject {
     return this.collection.findOne(filter, options);
   }
 
+  public findOneByIdFilter(identifier: string,
+    options: FindOptions<T> = {},
+  ): Promise<WithId<T>> {
+    const _id= new ObjectId(identifier) as Filter<T>;
+    return this.collection.findOne(_id, options);
+  }
+
   public async createOne(
     data: OptionalUnlessRequiredId<T>,
   ): Promise<InsertOneResult<T>> {
@@ -74,6 +75,12 @@ export abstract class Abstract<T> implements IDaoObject {
     return this.collection.updateOne({ _id }, {
       $set: data,
     } as UpdateFilter<T>);
+  }
+
+  public async findItemsPaged(
+    options: FindOptions<T> = {},
+  ): Promise<WithId<T>[]> {
+    return this.collection.find({}, options).toArray();
   }
 
   public async UpdateRaw(
