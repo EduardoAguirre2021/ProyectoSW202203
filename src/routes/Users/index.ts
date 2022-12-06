@@ -9,6 +9,7 @@ router.post('/signin',
 body('email').isEmail().withMessage("Email enviado tiene formato incorrecto") ,
 body('password').isStrongPassword({minLength:8}).withMessage("Contraseña no cumple con los requisitos"),
 body('username').isLength({min:5}).withMessage("El username no cumple con la longitud minima"),
+body('name').isLength({min:2}).withMessage("El username no cumple con la longitud minima"),
 body('birthDate').isDate().withMessage("Formato incorrecto"),
 async (req, res) => {
 
