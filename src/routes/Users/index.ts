@@ -13,6 +13,9 @@ router.post(
   body('username')
     .isLength({ min: 5 })
     .withMessage('El username no cumple con la longitud minima'),
+  body('name')
+    .isLength({ min: 2 })
+    .withMessage('El username no cumple con la longitud minima'),
   body('birthDate').isDate().withMessage('Formato incorrecto'),
   async (req, res) => {
     try {
@@ -219,6 +222,20 @@ router.get(
 
 /*router.get('/verifypin', body('pin').isNumeric().withMessage("Pin enviado tiene formato incorrecto"),
 body('email').isEmail().withMessage("Email enviado tiene formato incorrecto"),
+
+router.get('/byid/:id', async (req, res) => {
+    try {
+            const { id }= req.params;
+            const result= await users.findUserById(id);
+            console.log(result);
+            res.status(200).json(result);
+    } catch (error) {
+        console.log("Error: ", error);
+        res.status(500).json({error: "Error al cargar los datos"});
+    }
+});
+
+router.put('/addrole/:id', body('role').isIn(['public', 'admin', 'auditor', 'support']).withMessage("Role incorrecto") ,
 async (req, res) => {
     try {
         const validation= validationResult(req);
@@ -284,5 +301,16 @@ router.get(
     }
   },
 );
+
+router.get('/', async (req, res) => {
+  try {
+    const { page, items } = { page: '1', items: '2', ...req.query };
+    console.log('USER', req.user);
+    res.json(await users.getUsersByUserPaged(Number(page), Number(items)));
+  } catch (ex) {
+    console.error(ex);
+    res.status(503).json({ error: ex });
+  }
+});
 
 export default router;
