@@ -167,31 +167,24 @@ router.put(
 
 //Agregar ruta para login
 
-router.post(
-  '/login',
-  body('email').isEmail().withMessage('Email enviado tiene formato incorrecto'),
-  async (req, res) => {
+router.post('/login', body('email').isEmail().withMessage('Email no tiene formato correcto'), async (req, res) => {
     try {
-      const validation = validationResult(req);
-      if (!validation.isEmpty()) {
+        const validation = validationResult(req);
+        if (!validation.isEmpty()) {
         res.status(400).json({ errors: validation.array() });
-      } else {
+        } else {
         const { email, password } = req.body;
         const result = await users.login(email, password);
-        if (result == true) {
-          res.status(200).json(result);
-        } else {
-          res.status(200).json({ msg: 'Login fallido', result: false });
+        console.log('Usuario logueado: ', result);
+        res.status(200).json(result);
         }
-      }
     } catch (error) {
-      console.log('Error: ', error);
-      res.status(500).json({ error: 'Error al cargar los datos' });
+        console.log('Error: ', error);
+        res.status(403).json({ error: 'Credenciales no son validas' });
     }
-  },
-);
+});
 
-router.get(
+router.post(
   '/recoverpassword',
   body('email').isEmail().withMessage('Email enviado tiene formato incorrecto'),
   async (req, res) => {
@@ -200,17 +193,14 @@ router.get(
       if (!validation.isEmpty()) {
         res.status(400).json({ errors: validation.array() });
       } else {
-        const { email } = req.body;
-        const result = await users.recoverPassword(email);
+        const { email, pin } = req.body;
+        const result = await users.recoverPassword(email, pin);
         if (result == true) {
           res
             .status(200)
             .json({ msg: 'Correo Enviado Exitosamente!', result: true });
         } else {
-          res.status(200).json({
-            msg: 'Correo no enviado, verifique la direccion de Correo Electronico',
-            result: false,
-          });
+          res.status(403).json({ error: 'El Correo no pudo ser enviado' });
         }
       }
     } catch (error) {
@@ -261,7 +251,7 @@ async (req, res) => {
 });
 */
 
-router.get(
+router.post(
   '/changepassword',
   body('password')
     .isLength({ min: 7 })
@@ -279,9 +269,7 @@ router.get(
         const { password, confirmpassword, email } = req.body;
         //const result= await users.changePassword(password, confirmPassword, email);
         if (password != confirmpassword) {
-          res
-            .status(200)
-            .json({ msg: 'Las contraseñas no coinciden', result: false });
+          res.status(403).json({ coincidir: "Las Contraseñas no coinciden" });
         } else {
           const result = await users.changePassword(email, password);
           if (result == true) {
@@ -289,9 +277,7 @@ router.get(
               .status(200)
               .json({ msg: 'Contraseña cambiada exitosamente', result: true });
           } else {
-            res
-              .status(200)
-              .json({ msg: 'No se pudo cambiar la contraseña', result: false });
+            res.status(403).json({ error: 'No se pudo Cambiar la Contraseña' });
           }
         }
       }
